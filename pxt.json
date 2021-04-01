@@ -1,0 +1,24 @@
+{
+    "name": "b-test",
+    "description": "",
+    "dependencies": {
+        "core": "*",
+        "radio": "*",
+        "microphone": "*",
+        "motor": "github:tangjie133/pxt-motor#v1.0.0",
+        "pxt-muselab": "github:muselab/pxt-wifi-shield#v1.9.34"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md",
+        "main.py"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "pyprj"
+}
