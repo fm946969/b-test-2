@@ -41,7 +41,7 @@ function 發出命令 () {
     } else {
         led.unplot(3, 0)
     }
-    radio.sendNumber(命令)
+    radio.sendValue("control", 命令)
 }
 let 樂園水位過高 = false
 let 資訊 = ""
