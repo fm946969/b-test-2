@@ -17,6 +17,7 @@ function 感測海龜位置 () {
     }
 }
 function 發出命令 () {
+    命令 = 0
     if (Led) {
         命令 += 1
         led.plot(0, 0)
@@ -41,7 +42,7 @@ function 發出命令 () {
     } else {
         led.unplot(3, 0)
     }
-    radio.sendValue("control", 命令)
+    radio.sendNumber(命令)
 }
 let 樂園水位過高 = false
 let 資訊 = ""
@@ -61,6 +62,7 @@ Pump3 = false
 pins.setPull(DigitalPin.P2, PinPullMode.PullUp)
 pins.setPull(DigitalPin.P12, PinPullMode.PullUp)
 MuseIoT.initializeWifi()
+radio.setTransmitPower(7)
 radio.setGroup(66)
 basic.forever(function () {
     資訊 = ""
@@ -68,7 +70,6 @@ basic.forever(function () {
     樂園水位過高 = Muse21.ReadInputSensor(AnalogPin.P1) < 500
     一號運動感應器 = pins.digitalReadPin(DigitalPin.P2) == 0
     二號運動感應器 = pins.digitalReadPin(DigitalPin.P12) == 0
-    資訊 = "T:" + Muse21.ReadInputSensor(AnalogPin.P0) + ",P:" + Muse21.ReadInputSensor(AnalogPin.P1) + ",A:" + pins.digitalReadPin(DigitalPin.P2) + ",B:" + pins.digitalReadPin(DigitalPin.P12)
     感測海龜位置()
     if (樂園水位過高) {
         Pump3 = true
@@ -76,6 +77,7 @@ basic.forever(function () {
         Pump3 = false
     }
     發出命令()
+    資訊 = "W" + Muse21.ReadInputSensor(AnalogPin.P0) + "," + Muse21.ReadInputSensor(AnalogPin.P1) + ",A" + pins.digitalReadPin(DigitalPin.P2) + pins.digitalReadPin(DigitalPin.P12) + "C" + 命令
     MuseOLED.writeStringNewLine(資訊)
     basic.pause(2000)
 })
