@@ -1,7 +1,9 @@
 function 感測海龜位置 () {
     if (一號運動感應器) {
+        閘門(true)
         Led = true
     } else {
+        閘門(false)
         Led = false
         led.unplot(0, 0)
     }
@@ -44,11 +46,24 @@ function 發出命令 () {
     }
     radio.sendNumber(命令)
 }
+function 閘門 (開啟: boolean) {
+    if (閘門已開 != 開啟) {
+        if (開啟) {
+            Muse21.control360Servo(Muse21.Servo.Servo7, Muse21.ServoDirection.clockwise, 40)
+        } else {
+            Muse21.control360Servo(Muse21.Servo.Servo7, Muse21.ServoDirection.anticlockwise, 40)
+        }
+        basic.pause(2000)
+        Muse21.control360Servo(Muse21.Servo.Servo7, Muse21.ServoDirection.clockwise, 0)
+        閘門已開 = 開啟
+    }
+}
 let 樂園水位過高 = false
 let 資訊 = ""
 let 命令 = 0
 let 二號運動感應器 = false
 let 一號運動感應器 = false
+let 閘門已開 = false
 let Pump3 = false
 let Pump2 = false
 let Pump1 = false
@@ -64,6 +79,8 @@ pins.setPull(DigitalPin.P12, PinPullMode.PullUp)
 MuseIoT.initializeWifi()
 radio.setTransmitPower(7)
 radio.setGroup(66)
+閘門已開 = true
+閘門(false)
 basic.forever(function () {
     資訊 = ""
     水缸有足夠水 = Muse21.ReadInputSensor(AnalogPin.P0) < 350

@@ -1,6 +1,5 @@
 def 感測海龜位置():
     global Led, Pump1, Pump2
-    MuseOLED.write_num_new_line(pins.digital_read_pin(DigitalPin.P2))
     if 一號運動感應器:
         Led = True
     else:
@@ -16,6 +15,7 @@ def 感測海龜位置():
         Pump2 = False
 def 發出命令():
     global 命令
+    命令 = 0
     if Led:
         命令 += 1
         led.plot(0, 0)
@@ -40,14 +40,13 @@ def 發出命令():
 樂園水位過高 = False
 資訊 = ""
 命令 = 0
+水缸有足夠水 = False
 二號運動感應器 = False
 一號運動感應器 = False
 Pump3 = False
 Pump2 = False
 Pump1 = False
 Led = False
-水缸有足夠水 = False
-水缸有足夠水 = False
 Led = False
 Pump1 = False
 Pump2 = False
@@ -55,7 +54,10 @@ Pump3 = False
 pins.set_pull(DigitalPin.P2, PinPullMode.PULL_UP)
 pins.set_pull(DigitalPin.P12, PinPullMode.PULL_UP)
 MuseIoT.initialize_wifi()
+radio.set_transmit_power(7)
 radio.set_group(66)
+Muse21.control360_servo(Muse21.Servo.SERVO7, Muse21.ServoDirection.CLOCKWISE, 64)
+Muse21.control360_servo(Muse21.Servo.SERVO7, Muse21.ServoDirection.CLOCKWISE, 0)
 
 def on_forever():
     global 資訊, 水缸有足夠水, 樂園水位過高, 一號運動感應器, 二號運動感應器, Pump3
@@ -64,13 +66,13 @@ def on_forever():
     樂園水位過高 = Muse21.read_input_sensor(AnalogPin.P1) < 500
     一號運動感應器 = pins.digital_read_pin(DigitalPin.P2) == 0
     二號運動感應器 = pins.digital_read_pin(DigitalPin.P12) == 0
-    資訊 = "T:" + str(水缸有足夠水) + ",P:" + str(樂園水位過高) + ",A:" + str(一號運動感應器) + ",B:" + str(二號運動感應器)
     感測海龜位置()
     if 樂園水位過高:
         Pump3 = True
     else:
         Pump3 = False
     發出命令()
-    MuseOLED.write_string_new_line("")
+    資訊 = "W" + ("" + str(Muse21.read_input_sensor(AnalogPin.P0))) + "," + ("" + str(Muse21.read_input_sensor(AnalogPin.P1))) + ",A" + ("" + str(pins.digital_read_pin(DigitalPin.P2))) + ("" + str(pins.digital_read_pin(DigitalPin.P12))) + "C" + ("" + str(命令))
+    MuseOLED.write_string_new_line(資訊)
     basic.pause(2000)
 basic.forever(on_forever)
