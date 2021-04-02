@@ -49,12 +49,12 @@ function 發出命令 () {
 function 閘門 (開啟: boolean) {
     if (閘門已開 != 開啟) {
         if (開啟) {
-            Muse21.control360Servo(Muse21.Servo.Servo7, Muse21.ServoDirection.clockwise, 40)
+            Muse21.control360Servo(Muse21.Servo.Servo8, Muse21.ServoDirection.clockwise, 40)
         } else {
-            Muse21.control360Servo(Muse21.Servo.Servo7, Muse21.ServoDirection.anticlockwise, 40)
+            Muse21.control360Servo(Muse21.Servo.Servo8, Muse21.ServoDirection.anticlockwise, 40)
         }
         basic.pause(2000)
-        Muse21.control360Servo(Muse21.Servo.Servo7, Muse21.ServoDirection.clockwise, 0)
+        Muse21.control360Servo(Muse21.Servo.Servo8, Muse21.ServoDirection.clockwise, 0)
         閘門已開 = 開啟
     }
 }
