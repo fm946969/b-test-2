@@ -1,8 +1,10 @@
 def 感測海龜位置():
     global Led, Pump1, Pump2
     if 一號運動感應器:
+        閘門(True)
         Led = True
     else:
+        閘門(False)
         Led = False
         led.unplot(0, 0)
     if 一號運動感應器 and 二號運動感應器 and 水缸有足夠水:
@@ -37,16 +39,28 @@ def 發出命令():
     else:
         led.unplot(3, 0)
     radio.send_number(命令)
+def 閘門(開啟: bool):
+    global 閘門已開
+    if 閘門已開 != 開啟:
+        if 開啟:
+            Muse21.control360_servo(Muse21.Servo.SERVO8, Muse21.ServoDirection.ANTICLOCKWISE, 60)
+        else:
+            Muse21.control360_servo(Muse21.Servo.SERVO8, Muse21.ServoDirection.CLOCKWISE, 60)
+        basic.pause(3000)
+        Muse21.control360_servo(Muse21.Servo.SERVO8, Muse21.ServoDirection.CLOCKWISE, 0)
+        閘門已開 = 開啟
 樂園水位過高 = False
 資訊 = ""
 命令 = 0
-水缸有足夠水 = False
 二號運動感應器 = False
 一號運動感應器 = False
+閘門已開 = False
 Pump3 = False
 Pump2 = False
 Pump1 = False
 Led = False
+水缸有足夠水 = False
+水缸有足夠水 = False
 Led = False
 Pump1 = False
 Pump2 = False
@@ -56,8 +70,7 @@ pins.set_pull(DigitalPin.P12, PinPullMode.PULL_UP)
 MuseIoT.initialize_wifi()
 radio.set_transmit_power(7)
 radio.set_group(66)
-Muse21.control360_servo(Muse21.Servo.SERVO7, Muse21.ServoDirection.CLOCKWISE, 64)
-Muse21.control360_servo(Muse21.Servo.SERVO7, Muse21.ServoDirection.CLOCKWISE, 0)
+閘門已開 = False
 
 def on_forever():
     global 資訊, 水缸有足夠水, 樂園水位過高, 一號運動感應器, 二號運動感應器, Pump3
@@ -72,7 +85,7 @@ def on_forever():
     else:
         Pump3 = False
     發出命令()
-    資訊 = "W" + ("" + str(Muse21.read_input_sensor(AnalogPin.P0))) + "," + ("" + str(Muse21.read_input_sensor(AnalogPin.P1))) + ",A" + ("" + str(pins.digital_read_pin(DigitalPin.P2))) + ("" + str(pins.digital_read_pin(DigitalPin.P12))) + "C" + ("" + str(命令))
+    資訊 = "W" + str(Muse21.read_input_sensor(AnalogPin.P0)) + "," + str(Muse21.read_input_sensor(AnalogPin.P1)) + ",A" + str(pins.digital_read_pin(DigitalPin.P2)) + str(pins.digital_read_pin(DigitalPin.P12)) + "C" + str(命令)
     MuseOLED.write_string_new_line(資訊)
     basic.pause(2000)
 basic.forever(on_forever)
