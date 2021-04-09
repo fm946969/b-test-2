@@ -1,5 +1,5 @@
 function 感測海龜位置 () {
-    閘門(一號運動感應器)
+    閘門(!(一號運動感應器))
     Led = 一號運動感應器
     Pump1 = 一號運動感應器 && 二號運動感應器 && 水缸有足夠水
     Pump2 = 二號運動感應器 && 水缸有足夠水 && !(Pump1)
@@ -41,11 +41,11 @@ function 閘門 (開啟: boolean) {
         if (開啟) {
             led.plot(0, 4)
             Muse21.control360Servo(Muse21.Servo.Servo8, Muse21.ServoDirection.clockwise, door_spd)
-            basic.pause(4250)
+            basic.pause(4500)
         } else {
             led.plot(4, 4)
             Muse21.control360Servo(Muse21.Servo.Servo8, Muse21.ServoDirection.anticlockwise, door_spd)
-            basic.pause(3500)
+            basic.pause(4500)
         }
         led.unplot(0, 4)
         led.unplot(4, 4)
