@@ -2,7 +2,7 @@ function 感測海龜位置 () {
     閘門(一號運動感應器)
     Led = 一號運動感應器
     Pump1 = 一號運動感應器 && 二號運動感應器 && 水缸有足夠水
-    Pump2 = 二號運動感應器 && 水缸有足夠水
+    Pump2 = 二號運動感應器 && 水缸有足夠水 && !(Pump1)
 }
 input.onButtonPressed(Button.A, function () {
     door_spd = 75 - door_spd
@@ -81,8 +81,8 @@ door_spd = 75
 led.plot(2, 2)
 basic.forever(function () {
     資訊 = ""
-    水缸有足夠水 = Muse21.ReadInputSensor(AnalogPin.P0) < 500
-    樂園水位過高 = Muse21.ReadInputSensor(AnalogPin.P1) < 500
+    水缸有足夠水 = Muse21.ReadInputSensor(AnalogPin.P0) < 700
+    樂園水位過高 = Muse21.ReadInputSensor(AnalogPin.P1) < 400
     一號運動感應器 = pins.digitalReadPin(DigitalPin.P2) == 0
     二號運動感應器 = pins.digitalReadPin(DigitalPin.P12) == 0
     感測海龜位置()
